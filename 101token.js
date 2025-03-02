@@ -1,6 +1,6 @@
 async function fetchTokenBalances() {
     const walletAddress = document.getElementById("walletAddress").innerText;
-    if (walletAddress === "未连接") return alert("请先连接钱包！");
+    if (walletAddress === "未连接") return;
 
     const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin,tether&vs_currencies=usd`);
     const prices = await response.json();
@@ -17,4 +17,5 @@ async function fetchTokenBalances() {
     ).join("");
 }
 
-document.getElementById("walletAddress").addEventListener("DOMSubtreeModified", fetchTokenBalances);
+// 监听钱包连接
+document.addEventListener("walletConnected", fetchTokenBalances);
