@@ -2,16 +2,26 @@ import { auth, db, doc, getDoc, updateDoc, increment, serverTimestamp } from './
 
 async function claimDailyEnergy() {
     const user = auth.currentUser;
-    if (!user) return alert("请先登录！");
+    if (!user) {
+        alert("请先登录！");
+        return;
+    }
 
     const userRef = doc(db, "users", user.uid);
-    const userData = (await getDoc(userRef)).data();
+    const userSnapshot = await getDoc(userRef);
+    
+    if (!userSnapshot.exists()) {
+        alert("用户数据不存在！");
+        return;
+    }
 
+    const userData = userSnapshot.data();
     const lastClaim = userData.lastClaim ? userData.lastClaim.toDate() : null;
     const today = new Date();
 
-    if (lastClaim && lastClaim.getDate() === today.getDate()) {
-        return alert("你今天已经领取过能量！");
+    if (lastClaim && lastClaim.toDateString() === today.toDateString()) {
+        alert("你今天已经领取过能量！");
+        return;
     }
 
     await updateDoc(userRef, {
@@ -23,4 +33,6 @@ async function claimDailyEnergy() {
     alert("领取成功！获得 100 能量！");
 }
 
-document.getElementById("claimEnergyBtn").addEventListener("click", claimDailyEnergy);
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("claimEnergyBtn").addEventListener("click", claimDailyEnergy);
+});
