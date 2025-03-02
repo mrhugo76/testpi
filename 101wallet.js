@@ -1,12 +1,16 @@
 async function connectWallet() {
     if (!window.ethereum) {
-        return alert("请安装 MetaMask！");
+        alert("请安装 MetaMask 以连接钱包！");
+        return;
     }
 
     try {
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         const walletAddress = accounts[0];
         document.getElementById("walletAddress").innerText = walletAddress;
+
+        // 触发事件，供其他模块监听
+        document.dispatchEvent(new CustomEvent("walletConnected", { detail: walletAddress }));
     } catch (error) {
         alert("连接钱包失败：" + error.message);
     }
