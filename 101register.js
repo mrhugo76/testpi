@@ -1,6 +1,10 @@
-import { auth, db, collection, doc, setDoc, getDocs, query, where, createUserWithEmailAndPassword, serverTimestamp, updateDoc, arrayUnion } from './firebase.js';
+import { auth, db, doc, setDoc, getDocs, query, where, createUserWithEmailAndPassword, serverTimestamp, updateDoc, arrayUnion } from './firebase.js';
 
-async function registerUser(email, password, referralCode) {
+async function registerUser() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const referralCode = document.getElementById("referralCode").value;
+
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -37,9 +41,6 @@ async function registerUser(email, password, referralCode) {
     }
 }
 
-document.getElementById("registerBtn").addEventListener("click", async () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const referralCode = document.getElementById("referralCode").value;
-    await registerUser(email, password, referralCode);
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("registerBtn").addEventListener("click", registerUser);
 });
